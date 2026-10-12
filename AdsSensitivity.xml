@@ -4,7 +4,7 @@
     <RepoId>Po11arr/AdsSensitivity</RepoId>
     <FriendlyName>ADS Sensitivity</FriendlyName>
     <Author>Polar</Author>
-    <Tooltip>FOV-based ADS sensitivity, per-weapon zoom and smooth zoom</Tooltip>
+    <Tooltip>Replaces vanilla's twitchy first-person weapons with CoD / Battlefield ADS sensitivity and variable per-weapon zoom</Tooltip>
     <Description>Aim-down-sights tuning for hand weapons.
 
 FOV-based sensitivity: replaces vanilla's flat 0.6x ironsight sensitivity with monitor distance scaling (coefficient 1.33 by default, the CoD / Battlefield default).
