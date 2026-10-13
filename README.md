@@ -1,4 +1,4 @@
-# ADS Sensitivity
+# Polar's ADS Improvements
 
 Space Engineers client plugin for [Pulsar](https://github.com/SpaceGT/Pulsar): FOV-based aim-down-sights sensitivity, per-weapon zoom and smooth zoom.
 
@@ -12,7 +12,7 @@ Client-side only. Works on any server with no server install.
 
 ## Settings
 
-Pulsar plugin list > ADS Sensitivity > Settings.
+Pulsar plugin list > Polar's ADS Improvements > Settings.
 
 | Option | Default | Range |
 |---|---|---|

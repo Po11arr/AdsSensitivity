@@ -30,7 +30,7 @@ public class Config : INotifyPropertyChanged
 
     #region User interface
 
-    public readonly string Title = "ADS Sensitivity";
+    public readonly string Title = "Polar's ADS Improvements";
 
     [Separator("Sensitivity")]
 

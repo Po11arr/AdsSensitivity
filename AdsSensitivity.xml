@@ -2,7 +2,7 @@
 <PluginData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="GitHubPlugin">
     <Id>4E0107FD-F943-42FF-BAE2-66C3A0F4A0D2</Id>
     <RepoId>Po11arr/AdsSensitivity</RepoId>
-    <FriendlyName>ADS Sensitivity</FriendlyName>
+    <FriendlyName>Polar's ADS Improvements</FriendlyName>
     <Author>Polar</Author>
     <Tooltip>Replaces vanilla's twitchy first-person weapons with CoD / Battlefield ADS sensitivity and variable per-weapon zoom</Tooltip>
     <Description>Aim-down-sights tuning for hand weapons.
