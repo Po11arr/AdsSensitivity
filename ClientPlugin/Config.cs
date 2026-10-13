@@ -94,12 +94,18 @@ public class Config : INotifyPropertyChanged
     #region Per-weapon zoom
 
     // Edited through the dynamic per-weapon rows the SettingsGenerator adds below the options above.
+    // Only values that differ from the weapon's preset or DefaultZoom are stored, so weapons the
+    // player never changed keep following DefaultZoom.
     public List<WeaponZoom> WeaponZooms { get; set; } = new();
+
+    // Config file format version. Null for files written by 1.1.0, which stored every weapon on dialog open.
+    public int? ConfigVersion { get; set; }
+    public const int CurrentConfigVersion = 2;
 
     private Dictionary<string, float> zoomLookup;
 
     /// <summary>Magnification for a weapon: saved value, else preset, else DefaultZoom.</summary>
-    public float GetZoom(string subtypeId, string displayName)
+    public float GetZoom(string subtypeId, string displayName, bool isBaseGame)
     {
         if (zoomLookup == null)
         {
@@ -112,19 +118,38 @@ public class Config : INotifyPropertyChanged
         if (subtypeId != null && zoomLookup.TryGetValue(subtypeId, out var value))
             return value;
 
-        return Preset(displayName) ?? defaultZoom;
+        return Fallback(displayName, isBaseGame);
     }
 
-    public void SetZoom(string subtypeId, float magnification)
+    public void SetZoom(string subtypeId, string displayName, bool isBaseGame, float magnification)
     {
-        var entry = WeaponZooms.Find(e => e.SubtypeId == subtypeId);
-        if (entry == null)
-            WeaponZooms.Add(entry = new WeaponZoom { SubtypeId = subtypeId });
-        entry.Magnification = Math.Max(1f, magnification);
+        magnification = Math.Max(1f, magnification);
+        var index = WeaponZooms.FindIndex(e => e.SubtypeId == subtypeId);
+
+        if (Math.Abs(magnification - Fallback(displayName, isBaseGame)) < 0.001f)
+        {
+            // Same as the preset or default: forget it so the weapon keeps following DefaultZoom.
+            if (index >= 0)
+                WeaponZooms.RemoveAt(index);
+        }
+        else if (index >= 0)
+        {
+            WeaponZooms[index].Magnification = magnification;
+        }
+        else
+        {
+            WeaponZooms.Add(new WeaponZoom { SubtypeId = subtypeId, Magnification = magnification });
+        }
+
         zoomLookup = null;
     }
 
-    // Starting values for vanilla weapons, matched on model numbers in the display name.
+    private float Fallback(string displayName, bool isBaseGame)
+    {
+        return (isBaseGame ? Preset(displayName) : null) ?? defaultZoom;
+    }
+
+    // Starting values for vanilla weapons only, matched on model numbers in the display name.
     private static float? Preset(string displayName)
     {
         if (string.IsNullOrEmpty(displayName))
@@ -143,6 +168,16 @@ public class Config : INotifyPropertyChanged
         zoomTime = Clamp(zoomTime, 0.05f, 0.4f, 0.15f);
         defaultZoom = Clamp(defaultZoom, 1f, 6f, 2f);
         WeaponZooms ??= new List<WeaponZoom>();
+
+        // 1.1.0 saved every weapon's preset or default when the settings dialog opened.
+        // Drop those copies so the weapons follow DefaultZoom again.
+        if (ConfigVersion == null)
+            WeaponZooms.RemoveAll(e => Math.Abs(e.Magnification - defaultZoom) < 0.001f
+                                       || Math.Abs(e.Magnification - 3f) < 0.001f
+                                       || Math.Abs(e.Magnification - 1.75f) < 0.001f
+                                       || Math.Abs(e.Magnification - 1.5f) < 0.001f);
+        ConfigVersion = CurrentConfigVersion;
+
         zoomLookup = null;
     }
 

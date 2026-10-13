@@ -7,10 +7,11 @@ using VRage.Utils;
 
 namespace ClientPlugin;
 
-internal readonly struct WeaponInfo(string subtypeId, string displayName)
+internal readonly struct WeaponInfo(string subtypeId, string displayName, bool isBaseGame)
 {
     public readonly string SubtypeId = subtypeId;
     public readonly string DisplayName = displayName;
+    public readonly bool IsBaseGame = isBaseGame;
 }
 
 internal static class WeaponCatalog
@@ -37,7 +38,7 @@ internal static class WeaponCatalog
                 if (weapon.AmmoMagazinesId == null || weapon.AmmoMagazinesId.Length == 0)
                     continue;
 
-                result.Add(new WeaponInfo(item.Id.SubtypeName, item.DisplayNameText ?? item.Id.SubtypeName));
+                result.Add(new WeaponInfo(item.Id.SubtypeName, item.DisplayNameText ?? item.Id.SubtypeName, item.Context?.IsBaseGame ?? false));
             }
         }
         catch (Exception e)
@@ -54,6 +55,6 @@ internal static class WeaponCatalog
         var item = MySession.Static?.LocalCharacter?.CurrentWeapon?.PhysicalItemDefinition;
         if (item == null)
             return config.DefaultZoom;
-        return config.GetZoom(item.Id.SubtypeName, item.DisplayNameText);
+        return config.GetZoom(item.Id.SubtypeName, item.DisplayNameText, item.Context?.IsBaseGame ?? false);
     }
 }

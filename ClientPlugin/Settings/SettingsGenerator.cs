@@ -100,13 +100,14 @@ internal class SettingsGenerator
         {
             var subtype = weapon.SubtypeId;
             var name = weapon.DisplayName;
+            var isBaseGame = weapon.IsBaseGame;
             yield return new AttributeInfo
             {
                 ElementType = new SliderAttribute(1f, 6f, 0.05f, SliderAttribute.SliderType.Float,
                     label: name + " (x)", description: subtype),
                 Name = "Zoom_" + subtype,
-                Getter = () => Config.Current.GetZoom(subtype, name),
-                Setter = value => Config.Current.SetZoom(subtype, (float)value),
+                Getter = () => Config.Current.GetZoom(subtype, name, isBaseGame),
+                Setter = value => Config.Current.SetZoom(subtype, name, isBaseGame, (float)value),
             };
         }
     }

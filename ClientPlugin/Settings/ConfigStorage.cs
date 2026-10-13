@@ -17,6 +17,7 @@ public static class ConfigStorage
         {
             var path = ConfigFilePath;
             Directory.CreateDirectory(Path.GetDirectoryName(path));
+            config.ConfigVersion = Config.CurrentConfigVersion;
             using (var text = File.CreateText(path))
                 new XmlSerializer(typeof(Config)).Serialize(text, config);
         }
